@@ -25,6 +25,7 @@ body{
   color: red; /* Cor dos corações */
 }
 
+
 h2{
 	margin: -30px auto 5px auto;
 	color: rgb(246, 184, 30);
@@ -86,9 +87,9 @@ kbd{
 	box-sizing: border-box;
 }
 
-.wall{
-	background-color: rgb(246, 184, 30);
-}
+.wall {
+    background-color: rgb(246, 184, 30); /* Define a cor das paredes */
+  }
 
 /* FRUITS ICON MADE BY SMASHICONS FOR FLATICONS*/
 .power-pellet{
@@ -139,22 +140,6 @@ kbd{
 	border:0;
 	border-radius: 0;
 	background-color: transparent;
-}
-
-.clyde{
-	content: url("https://i.ibb.co/GsLj7MQ/imresizer-1732970486956.png");
-	filter: hue-rotate(35deg) brightness(170%);
-	border:0;
-	background-color: transparent !important;
-	border-radius: 0 !important;
-	transform: rotate(0deg) !important;
-}
-
-.pac-man{
-	background-color: yellow;
-	border-radius: 10px;
-	border: none;
-	transform: rotate(115deg);
 }
 
 .pac-man {
@@ -355,6 +340,8 @@ footer{
 		text-align: center;
 	}
 }
+
+
 
 
 
