@@ -44,7 +44,7 @@ h2{
 	text-shadow: 1px 1px 0 rgba(239,0,0,1.00);
 }
 #mobile{
-	display: none;
+	display: block;
 }
 
 kbd{
