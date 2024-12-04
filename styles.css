@@ -11,20 +11,6 @@ body{
 	width: 700px;
 }
 
-#lives-container {
-  position: absolute;
-  top: 240px;
-  right: 340px;
-  font-size: 24px;
-  display: flex; /* Para alinhar os corações em linha */
-  gap: 5px; /* Espaçamento entre os corações */
-}
-
-.heart {
-  font-size: 30px; /* Tamanho dos corações */
-  color: red; /* Cor dos corações */
-}
-
 
 h2{
 	margin: -30px auto 5px auto;
