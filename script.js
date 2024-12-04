@@ -151,7 +151,7 @@ function bestScoreCount(score) {
 			case 37:
 				if (pacmanCurrentIndex % width !== 0 && !squares[pacmanCurrentIndex -1].classList.contains("wall") && !squares[pacmanCurrentIndex -1].classList.contains("ghost-lair")) {
 					pacmanCurrentIndex -=1;
-					squares[pacmanCurrentIndex].style.transform = "scaleX(-1) rotate(95deg)";
+					squares[pacmanCurrentIndex].style.transform = "scaleX(-1) rotate(0deg)";
 					// If Pac-Man is on the left exit
 					if (pacmanCurrentIndex - 1 === 363) {
 						pacmanCurrentIndex = 391;
@@ -166,7 +166,7 @@ function bestScoreCount(score) {
 			case 39:
 				if (pacmanCurrentIndex % width < width - 1 && !squares[pacmanCurrentIndex +1].classList.contains("wall") && !squares[pacmanCurrentIndex +1].classList.contains("ghost-lair")){ 
           pacmanCurrentIndex += 1;
-					squares[pacmanCurrentIndex].style.transform = "scaleY(1) rotate(95deg)";
+					squares[pacmanCurrentIndex].style.transform = "scaleY(1) rotate(0deg)";
 					// If Pac-Man is on the right exit
 					if(pacmanCurrentIndex + 1 === 392) {
 						pacmanCurrentIndex = 364;
@@ -175,7 +175,7 @@ function bestScoreCount(score) {
 			case 40:
 				if (pacmanCurrentIndex + width < width * width && !squares[pacmanCurrentIndex + width].classList.contains("wall") && !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")) {
 					pacmanCurrentIndex += width;
-					squares[pacmanCurrentIndex].style.transform = "rotate(190deg)";
+					squares[pacmanCurrentIndex].style.transform = "rotate(0deg)";
 				}
 				break;
 		}
@@ -220,7 +220,7 @@ function bestScoreCount(score) {
 				// Swipe Left
         if (pacmanCurrentIndex % width !== 0 && !squares[pacmanCurrentIndex -1].classList.contains("wall") && !squares[pacmanCurrentIndex -1].classList.contains("ghost-lair")) {
 					pacmanCurrentIndex -=1;
-					squares[pacmanCurrentIndex].style.transform = "scaleX(-1) rotate(95deg)";
+					squares[pacmanCurrentIndex].style.transform = "scaleX(-1) rotate(0deg)";
 					// If Pac-Man is on the left exit
 					if (pacmanCurrentIndex - 1 === 363) {
 						pacmanCurrentIndex = 391;
@@ -228,7 +228,7 @@ function bestScoreCount(score) {
 			} else {
 				// Swipe Right
 				if (pacmanCurrentIndex % width < width - 1 && !squares[pacmanCurrentIndex +1].classList.contains("wall") && !squares[pacmanCurrentIndex +1].classList.contains("ghost-lair")){ pacmanCurrentIndex += 1;
-					squares[pacmanCurrentIndex].style.transform = "scaleY(1) rotate(95deg)";
+					squares[pacmanCurrentIndex].style.transform = "scaleY(1) rotate(0deg)";
 					// If Pac-Man is on the right exit
 					if(pacmanCurrentIndex + 1 === 392) {
 						pacmanCurrentIndex = 364;
@@ -244,7 +244,7 @@ function bestScoreCount(score) {
 				// Swipe Down
 				if (pacmanCurrentIndex + width < width * width && !squares[pacmanCurrentIndex + width].classList.contains("wall") && !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")) {
 					pacmanCurrentIndex += width;
-					squares[pacmanCurrentIndex].style.transform = "rotate(190deg)";
+					squares[pacmanCurrentIndex].style.transform = "rotate(0deg)";
 				}
 			}
 		}
