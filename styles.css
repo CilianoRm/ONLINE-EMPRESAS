@@ -31,6 +31,7 @@ h2{
 }
 #mobile{
 	display: block;
+  color: white;
 }
 
 kbd{
@@ -326,7 +327,6 @@ footer{
 		text-align: center;
 	}
 }
-
 
 
 
