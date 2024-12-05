@@ -476,7 +476,6 @@ function showVictoryMessage() {
     }
 
     // Exibe a mensagem de vitória
-    alert(`Parabéns, você venceu! Tempo de jogo: ${gameTime} segundos`);
 
 }
   
@@ -503,7 +502,6 @@ function checkForWin() {
 		// Para o movimento de todos os fantasmas
 		ghosts.forEach(ghost => clearInterval(ghost.timerId));
     clearInterval(updateGameTime);
-    console.log("Tempo de jogo finalizado:", gameTime, "segundos");
 
 		// Exibe a mensagem de vitória
 		showVictoryMessage();
@@ -515,7 +513,6 @@ function checkForWin() {
 // Função para mostrar a mensagem de vitória
 function showVictoryMessage() {
     const winMessage = document.createElement('div');
-    winMessage.innerText = `Você venceu! Tempo: ${gameTime} segundos`;
     document.body.appendChild(winMessage);
     let youWon = document.createElement("div");
 			youWon.classList.add("won");
