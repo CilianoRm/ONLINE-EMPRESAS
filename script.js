@@ -76,14 +76,19 @@ document.getElementById("play").addEventListener("click", function game() {
     }
 
     // Quando Pac-Man comer um Power-Pellet
-    function powerPelletEaten() {
-        if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
-            toWin += 10;
-            ghosts.forEach(ghost => ghost.isScared = true);
-            setTimeout(unScareGhosts, 7000);
-            squares[pacmanCurrentIndex].classList.remove("power-pellet");
-        }
+function powerPelletEaten() {
+    if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
+        squares[pacmanCurrentIndex].classList.remove("power-pellet");
+        ghosts.forEach(ghost => {
+            ghost.isScared = true;
+            setTimeout(() => {
+                if (ghost.isScared) {
+                    defeatGhost(ghost); // Remove o fantasma se ainda estiver assustado
+                }
+            }, 7000); // Após 7 segundos, verifica se pode derrotar
+        });
     }
+}
 
     // Verificar se o jogo acabou
     function checkForGameOver() {
@@ -103,21 +108,20 @@ document.getElementById("play").addEventListener("click", function game() {
     }
 
     // Verificar se o jogador ganhou
-    function checkForWin() {
-        if (toWin === 372) {
-            ghosts.forEach(ghost => clearInterval(ghost.timerId));
-            document.removeEventListener("keydown", movePacman);
-            let youWon = document.createElement("div");
-            youWon.classList.add("won");
-            document.body.append(youWon);
-            restartButton.classList.add("restart");
-            document.body.append(restartButton);
-            document.getElementById("play").removeEventListener("click", game);
-            restartButton.addEventListener("click", () => {
-                window.location.reload(false);
-            });
-        }
+  function checkForWin() {
+    if (toWin === 372 && ghosts.length === 0) {
+        // Todos os pac-dots foram comidos e todos os fantasmas foram derrotados
+        clearInterval(timer);
+        document.removeEventListener("keydown", movePacman);
+        let youWon = document.createElement("div");
+        youWon.classList.add("won");
+        youWon.textContent = "Você venceu!";
+        document.body.append(youWon);
+        restartButton.classList.add("restart");
+        document.body.append(restartButton);
+        restartButton.addEventListener("click", resetGame);
     }
+}
 
 });
 
@@ -136,11 +140,11 @@ document.getElementById("play").addEventListener("click", function game() {
 		1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,
 		1,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,
 		4,4,4,4,4,1,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,1,4,4,4,4,4,
-		4,4,4,4,4,1,0,0,0,0,0,1,1,4,4,1,1,0,0,0,0,0,1,4,4,4,4,4,
-		1,1,1,1,1,1,0,1,1,1,0,1,2,2,2,2,1,0,1,1,1,0,1,1,1,1,1,1,
-		1,1,1,1,1,1,0,1,4,1,0,2,2,2,2,2,2,0,1,4,1,0,0,0,0,0,0,4,
-		1,1,1,1,1,1,0,1,1,1,0,1,2,2,2,2,1,0,1,1,1,0,1,1,1,1,1,1,
-		4,4,4,4,4,1,0,0,0,0,0,1,1,4,4,1,1,0,0,0,0,0,1,4,4,4,4,4,
+		4,4,4,4,4,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,4,4,4,4,4,
+		1,1,1,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0,1,1,1,0,1,1,1,1,1,1,
+		1,1,1,1,1,1,0,1,4,1,0,0,0,0,0,0,0,0,1,4,1,0,0,0,0,0,0,4,
+		1,1,1,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0,1,1,1,0,1,1,1,1,1,1,
+		4,4,4,4,4,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,4,4,4,4,4,
 		4,4,4,4,4,1,0,1,1,1,0,0,0,0,0,0,0,0,1,0,1,0,1,4,4,4,4,4,
 		1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,1,3,1,0,1,1,1,1,1,1,
 		1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,3,1,
@@ -324,6 +328,19 @@ document.getElementById("play").addEventListener("click", function game() {
 				squares[pacmanCurrentIndex].classList.remove("power-pellet");
 			}
 		}
+  
+  function defeatGhost(ghost) {
+    // Remove o fantasma do jogo
+    const ghostIndex = ghosts.indexOf(ghost);
+    if (ghostIndex > -1) {
+        ghosts.splice(ghostIndex, 1); // Remove o fantasma da lista
+        squares[ghost.currentIndex].classList.remove(ghost.className, "ghost", "scared-ghost");
+        clearInterval(ghost.timerId); // Para o movimento do fantasma
+    }
+    // Verifica se todos os fantasmas foram derrotados
+    checkForWin();
+}
+
 
 
 // Create Ghost template
@@ -395,20 +412,20 @@ document.getElementById("play").addEventListener("click", function game() {
 		}, ghost.speed)
 	}
 
-// Check for Game Over
-	function checkForGameOver () {
-		if (squares[pacmanCurrentIndex].classList.contains("ghost") && !squares[pacmanCurrentIndex].classList.contains("scared-ghost")) {
-			ghosts.forEach(ghost => clearInterval(ghost.timerId));
-			document.removeEventListener("keydown", movePacman);
-			let gameOver = document.createElement("div");
-			gameOver.classList.add("gameOver");
-			document.body.append(gameOver);
-			restartButton.classList.add("restart");
-			document.body.append(restartButton);
-			document.getElementById("play").removeEventListener("click", game);
-			restartButton.addEventListener("click", () => {window.location.reload(false)})				
-		}	
-	}
+function checkForGameOver() {
+    if (squares[pacmanCurrentIndex].classList.contains("ghost") && !squares[pacmanCurrentIndex].classList.contains("scared-ghost")) {
+        clearInterval(timer);
+        ghosts.forEach(ghost => clearInterval(ghost.timerId));
+        document.removeEventListener("keydown", movePacman);
+        let gameOver = document.createElement("div");
+        gameOver.classList.add("gameOver");
+        gameOver.textContent = "Game Over!";
+        document.body.append(gameOver);
+        restartButton.classList.add("restart");
+        document.body.append(restartButton);
+        restartButton.addEventListener("click", resetGame);
+    }
+}
 
 // Check for Win
 	function checkForWin () {
