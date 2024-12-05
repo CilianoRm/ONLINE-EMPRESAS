@@ -1,129 +1,23 @@
 let restartButton = document.createElement("button");
 let toWin = 0;
-let timer;
-let time = 0; // Tempo de jogo
+let ghostsEaten = 0; // Contador de fantasmas comidos
+// Variáveis para armazenar o tempo e o melhor tempo
+let startTime;  // Hora de início do jogo
+let gameTime = 0;  // Tempo de jogo em segundos
 
-// Exibir o tempo no jogo
-let timeDisplay = document.createElement("div");
-timeDisplay.classList.add("time");
-document.body.append(timeDisplay);
-
-// Função para atualizar o tempo a cada segundo
-function startTimer() {
-    timer = setInterval(function() {
-        time++;
-        timeDisplay.textContent = `Tempo: ${time} segundos`; // Atualiza o tempo no display
-    }, 1000);
+// Função que atualiza o tempo de jogo
+function updateGameTime() {
+    gameTime = Math.floor((Date.now() - startTime) / 1000);  // Calcula o tempo de jogo em segundos
+    document.getElementById('score').innerText = gameTime;  // Atualiza o tempo no elemento da tela
 }
 
-// Função para reiniciar o jogo e resetar o tempo
-function resetGame() {
-    clearInterval(timer); // Para o timer anterior
-    time = 0; // Resetando o tempo
-    timeDisplay.textContent = `Tempo: ${time} segundos`; // Atualiza o tempo na tela
-    startTimer(); // Começa o timer novamente
-    // Redefina o jogo aqui
-    // Reiniciar o layout do jogo e outros elementos
-    window.location.reload(false);
+// Função para iniciar o jogo
+function startGame() {
+    startTime = Date.now();  // Registra o momento em que o jogo começa
+    gameTime = 0;  // Reinicia o tempo de jogo
+    updateGameTime();  // Atualiza o tempo na tela imediatamente
+    setInterval(updateGameTime, 1000);  // Atualiza o tempo a cada segundo enquanto o jogo estiver em andamento
 }
-
-// Adicionar o evento ao botão de reiniciar
-restartButton.addEventListener("click", resetGame);
-
-// Ao iniciar o jogo
-document.getElementById("play").addEventListener("click", function game() {
-    const width = 28;
-    const grid = document.querySelector(".grid");
-    const layout = [
-        // Layout do jogo aqui...
-    ];
-    const squares = [];
-
-    // Criar a grade
-    function createBoard() {
-        for (let i = 0; i < layout.length; i++) {
-            const square = document.createElement("div");
-            grid.appendChild(square);
-            squares.push(square);
-
-            // Adicionar o layout no tabuleiro
-            if (layout[i] === 0) {
-                squares[i].classList.add("pac-dot");
-            } else if (layout[i] === 1) {
-                squares[i].classList.add("wall");
-            } else if (layout[i] === 2) {
-                squares[i].classList.add("ghost-lair");
-            } else if (layout[i] === 3) {
-                squares[i].classList.add("power-pellet");
-            } else if (layout[i] === 4) {
-                squares[i].classList.add("empty");
-            }
-        }
-    }
-    createBoard();
-
-    // Iniciar o timer
-    startTimer();
-
-    // Restante do código do jogo...
-
-    // Quando Pac-Man comer um Pac-Dot
-    function pacDotEaten() {
-        if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
-            toWin++;
-            squares[pacmanCurrentIndex].classList.remove("pac-dot");
-        }
-    }
-
-    // Quando Pac-Man comer um Power-Pellet
-function powerPelletEaten() {
-    if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
-        squares[pacmanCurrentIndex].classList.remove("power-pellet");
-        ghosts.forEach(ghost => {
-            ghost.isScared = true;
-            setTimeout(() => {
-                if (ghost.isScared) {
-                    defeatGhost(ghost); // Remove o fantasma se ainda estiver assustado
-                }
-            }, 7000); // Após 7 segundos, verifica se pode derrotar
-        });
-    }
-}
-
-    // Verificar se o jogo acabou
-    function checkForGameOver() {
-        if (squares[pacmanCurrentIndex].classList.contains("ghost") && !squares[pacmanCurrentIndex].classList.contains("scared-ghost")) {
-            ghosts.forEach(ghost => clearInterval(ghost.timerId));
-            document.removeEventListener("keydown", movePacman);
-            let gameOver = document.createElement("div");
-            gameOver.classList.add("gameOver");
-            document.body.append(gameOver);
-            restartButton.classList.add("restart");
-            document.body.append(restartButton);
-            document.getElementById("play").removeEventListener("click", game);
-            restartButton.addEventListener("click", () => {
-                window.location.reload(false);
-            });
-        }
-    }
-
-    // Verificar se o jogador ganhou
-  function checkForWin() {
-    if (toWin === 372 && ghosts.length === 0) {
-        // Todos os pac-dots foram comidos e todos os fantasmas foram derrotados
-        clearInterval(timer);
-        document.removeEventListener("keydown", movePacman);
-        let youWon = document.createElement("div");
-        youWon.classList.add("won");
-        youWon.textContent = "Você venceu!";
-        document.body.append(youWon);
-        restartButton.classList.add("restart");
-        document.body.append(restartButton);
-        restartButton.addEventListener("click", resetGame);
-    }
-}
-
-});
 
 document.getElementById("play").addEventListener("click", function game() {
 	const width = 28; // 28*28 = 784 squares
@@ -142,7 +36,7 @@ document.getElementById("play").addEventListener("click", function game() {
 		4,4,4,4,4,1,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,1,4,4,4,4,4,
 		4,4,4,4,4,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,4,4,4,4,4,
 		1,1,1,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0,1,1,1,0,1,1,1,1,1,1,
-		1,1,1,1,1,1,0,1,4,1,0,0,0,0,0,0,0,0,1,4,1,0,0,0,0,0,0,4,
+		1,1,1,1,1,1,0,1,4,1,0,0,0,0,0,0,0,0,1,4,1,0,0,0,0,0,5,1,
 		1,1,1,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0,1,1,1,0,1,1,1,1,1,1,
 		4,4,4,4,4,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,1,4,4,4,4,4,
 		4,4,4,4,4,1,0,1,1,1,0,0,0,0,0,0,0,0,1,0,1,0,1,4,4,4,4,4,
@@ -158,8 +52,48 @@ document.getElementById("play").addEventListener("click", function game() {
 		1,0,0,0,0,0,0,0,0,0,0,0,1,4,4,1,0,0,0,1,4,4,1,0,0,0,0,1,
 		1,1,1,1,1,1,1,1,1,1,1,1,1,4,4,1,1,1,1,1,4,4,1,1,1,1,1,1]; 
 	// 0 = pac-dot ; 1 = wall ; 2 = ghost-lair ; 3 = power-pellet ; 4 = empty;
+  let targetIndex = layout.indexOf(5); // Encontrar a posição de special-area (onde o valor é 5)
 	const squares = [];
+  
+  
+  // Variáveis de tempo
+let startTime = Date.now(); // Marca o início do jogo
+let gameTime = 0; // Variável para armazenar o tempo de jogo
 
+      // Função para calcular o tempo de jogo
+    function updateGameTime() {
+        gameTime = Math.floor((Date.now() - startTime) / 1000); // Tempo em segundos
+        document.getElementById('score').innerText = gameTime;  // Atualiza o tempo no elemento com id="score"
+    }
+
+    // Chame a função `startGame()` quando o jogo começar
+    startGame();  // Inicia o jogo e começa a contagem do tempo
+
+
+function createBoard() {
+    for (let i = 0; i < layout.length; i++) {
+        const square = document.createElement("div");
+        grid.appendChild(square);
+        squares.push(square);
+
+        // Adicionando classes ao grid conforme o layout
+        if (layout[i] === 0) {
+            squares[i].classList.add("pac-dot");
+        } else if (layout[i] === 1) {
+            squares[i].classList.add("wall");
+        } else if (layout[i] === 2) {
+            squares[i].classList.add("ghost-lair");
+            totalGhosts++; // Conta o número de fantasmas no início
+        } else if (layout[i] === 3) {
+            squares[i].classList.add("power-pellet");
+        } else if (layout[i] === 4) {
+            squares[i].classList.add("empty");
+        } else if (layout[i] === 5) {
+            squares[i].classList.add("special-area");
+        }
+    }
+}
+createBoard();
 
 // Draw the grid
 	function createBoard() {
@@ -183,6 +117,12 @@ document.getElementById("play").addEventListener("click", function game() {
 		}
 	}
 	createBoard();
+  
+  // Iniciar o jogo ao clicar no botão de play
+document.getElementById('play').addEventListener('click', function() {
+    startGame();
+    // Adicionar outras inicializações do jogo aqui, como a posição inicial do Pac-Man
+});
 	
 // Starting position of Pac-Man
 	let pacmanCurrentIndex = 518;
@@ -190,6 +130,52 @@ document.getElementById("play").addEventListener("click", function game() {
 
 // Move Pac-Man
 	function movePacman (e) {
+    // Função para mover Pac-Man (exemplo)
+function movePacMan(direction) {
+    // Lógica de movimento de Pac-Man (dependendo da direção)
+    // Atualize a posição de Pac-Man aqui
+
+    // Verifique se Pac-Man chegou à special-area
+    const pacManPosition = getPacManPosition(); // Função que retorna a posição atual do Pac-Man
+    if (layout[pacManPosition] === 5) {
+        pacManInSpecialArea = true;
+    }
+  if (pacmanCurrentIndex === targetIndex && ghostsEaten === totalGhosts) {
+        showVictoryMessage();  // Exibe a vitória com o tempo
+    }
+
+    checkWinCondition(); // Verificar condição de vitória
+    updateGameTime();
+}
+
+    
+    // Chame a função `startGame()` quando o jogo começar
+document.getElementById('play').addEventListener('click', function() {
+    startGame();  // Inicia o jogo
+    this.style.display = 'none';  // Esconde o botão de início
+    document.getElementById('footer').style.display = 'none';  // Esconde o rodapé
+    document.getElementById('mobile').style.display = 'none';  // Esconde a mensagem mobile
+});
+    
+    function moveToNextPosition(newIndex) {
+    pacmanCurrentIndex = newIndex;
+    movePacMan();  // Verifica se o Pac-Man chegou à vitória após o movimento
+}
+    
+    // Função fictícia para pegar a posição do Pac-Man (baseado na sua lógica)
+function getPacManPosition() {
+    // Retorne a posição atual de Pac-Man no layout
+    return pacManPositionIndex; // Substitua por seu cálculo
+}
+    
+// Função para verificar a condição de vitória
+function checkWinCondition() {
+    if (ghostsEaten === totalGhosts && pacManInSpecialArea) {
+        alert("Você ganhou!");
+        // Pode adicionar lógica para reiniciar o jogo ou dar outra recompensa
+    }
+}
+
 		squares[pacmanCurrentIndex].classList.remove("pac-man");
 		switch(e.keyCode){
 			case 37:
@@ -288,7 +274,7 @@ document.getElementById("play").addEventListener("click", function game() {
 				// Swipe Down
 				if (pacmanCurrentIndex + width < width * width && !squares[pacmanCurrentIndex + width].classList.contains("wall") && !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")) {
 					pacmanCurrentIndex += width;
-					squares[pacmanCurrentIndex].style.transform = "rotate(0deg)";
+					squares[pacmanCurrentIndex].style.transform = "rotate(00deg)";
 				}
 			}
 		}
@@ -328,117 +314,225 @@ document.getElementById("play").addEventListener("click", function game() {
 				squares[pacmanCurrentIndex].classList.remove("power-pellet");
 			}
 		}
-  
-  function defeatGhost(ghost) {
-    // Remove o fantasma do jogo
-    const ghostIndex = ghosts.indexOf(ghost);
-    if (ghostIndex > -1) {
-        ghosts.splice(ghostIndex, 1); // Remove o fantasma da lista
-        squares[ghost.currentIndex].classList.remove(ghost.className, "ghost", "scared-ghost");
-        clearInterval(ghost.timerId); // Para o movimento do fantasma
-    }
-    // Verifica se todos os fantasmas foram derrotados
-    checkForWin();
-}
-
 
 
 // Create Ghost template
-	class Ghost {
-		constructor(className, startIndex, speed){
-			this.className = className;
-			this.startIndex = startIndex;
-			this.speed = speed;
-			this.currentIndex = startIndex;
-			this.timerId = NaN;
-			this.isScared = false;
-		}
+
+class Ghost {
+	constructor(className, startIndex, speed) {
+		this.className = className;
+		this.startIndex = startIndex;
+		this.speed = speed;
+		this.currentIndex = startIndex;
+		this.timerId = NaN;
+		this.isScared = false;
+		this.isRemoved = false; // Estado para verificar se o fantasma foi removido
 	}
+}
 
-	const ghosts = [
-		new Ghost("blinky", 348, 290),
-		new Ghost("pinky", 376, 380),
-		new Ghost("inky", 351, 200),
-		new Ghost("clyde", 379, 250)
-	]
-		
-// Give back their colors to the ghosts
-	function unScareGhosts () {ghosts.forEach(ghost => ghost.isScared = false)}
-	
-		
-// Draw the ghosts onto the grid
-	ghosts.forEach(ghost => {
-		squares[ghost.currentIndex].classList.add(ghost.className);
-		squares[ghost.currentIndex].classList.add("ghost");
-	})
+const ghosts = [
+	new Ghost("blinky", 348, 290),
+	new Ghost("pinky", 376, 380),
+	new Ghost("inky", 351, 200),
+	new Ghost("clyde", 379, 250),
+];
+const totalGhosts = ghosts.length; // Número total de fantasmas
+  
+  // Função para simular a ação de Pac-Man comer fantasmas
+function eatGhost(pacManPosition) {
+    const ghostPosition = layout[pacManPosition];
 
-// Move the ghosts 
-	ghosts.forEach(ghost => moveGhost(ghost));
-
-	function moveGhost (ghost) {
-		const directions = [-1, +1, width, -width];
-		let direction = directions[Math.floor(Math.random() * directions.length)];
-		ghost.timerId = setInterval(function () {
-			if (!squares[ghost.currentIndex + direction].classList.contains("ghost") && !squares[ghost.currentIndex + direction].classList.contains("wall")) {
-				squares[ghost.currentIndex].classList.remove(ghost.className);
-				squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
-				ghost.currentIndex += direction;
-				squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
-			} else if (ghost.currentIndex - 1 === 363) {
-				squares[ghost.currentIndex].classList.remove(ghost.className, "ghost");
-				ghost.currentIndex = 391;
-				squares[ghost.currentIndex].classList.add("ghost");
-			} else if (ghost.currentIndex + 1 === 392) {
-				squares[ghost.currentIndex].classList.remove(ghost.className, "ghost");
-				ghost.currentIndex = 364;
-				squares[ghost.currentIndex].classList.add("ghost");
-			} else {
-				direction = directions[Math.floor(Math.random() * directions.length)]
-			}
-
-			
-			if (ghost.isScared) {
-				squares[ghost.currentIndex].classList.add("scared-ghost");
-			}
-
-			if (squares[pacmanCurrentIndex].classList.contains("scared-ghost")) {
-				squares[ghost.currentIndex].classList.remove(ghost.className, "ghost", "scared-ghost");
-				ghost.currentIndex = ghost.startIndex;
-				squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
-			}
-				
-			checkForGameOver();
-			
-		}, ghost.speed)
-	}
-
-function checkForGameOver() {
-    if (squares[pacmanCurrentIndex].classList.contains("ghost") && !squares[pacmanCurrentIndex].classList.contains("scared-ghost")) {
-        clearInterval(timer);
-        ghosts.forEach(ghost => clearInterval(ghost.timerId));
-        document.removeEventListener("keydown", movePacman);
-        let gameOver = document.createElement("div");
-        gameOver.classList.add("gameOver");
-        gameOver.textContent = "Game Over!";
-        document.body.append(gameOver);
-        restartButton.classList.add("restart");
-        document.body.append(restartButton);
-        restartButton.addEventListener("click", resetGame);
+    if (ghostPosition === 2) { // Verifica se Pac-Man está na posição de um fantasma
+        layout[pacManPosition] = 4; // Remover fantasma do layout
+        ghostsEaten++; // Incrementa a contagem de fantasmas comidos
+        updateGrid(); // Atualiza o grid após comer o fantasma
     }
 }
 
-// Check for Win
-	function checkForWin () {
-		if (toWin === 372) {
+// Give back their colors to the ghosts
+function unScareGhosts() {
+	ghosts.forEach(ghost => {
+		if (!ghost.isRemoved) {
+			ghost.isScared = false;
+		}
+	});
+}
+
+// Draw the ghosts onto the grid
+ghosts.forEach(ghost => {
+	if (!ghost.isRemoved) {
+		squares[ghost.currentIndex].classList.add(ghost.className);
+		squares[ghost.currentIndex].classList.add("ghost");
+	}
+});
+
+// Move the ghosts
+ghosts.forEach(ghost => moveGhost(ghost));
+
+function moveGhost(ghost) {
+	const directions = [-1, +1, width, -width];
+	let direction = directions[Math.floor(Math.random() * directions.length)];
+
+	ghost.timerId = setInterval(function () {
+		if (ghost.isRemoved) {
+			clearInterval(ghost.timerId); // Para o movimento se o fantasma foi removido
+			return;
+		}
+
+		if (
+			!squares[ghost.currentIndex + direction].classList.contains("ghost") &&
+			!squares[ghost.currentIndex + direction].classList.contains("wall")
+		) {
+			// Remove as classes do fantasma da posição atual
+			squares[ghost.currentIndex].classList.remove(ghost.className);
+			squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
+
+			// Move para a nova posição
+			ghost.currentIndex += direction;
+			squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
+		} else if (ghost.currentIndex - 1 === 363) {
+			// Teletransporte do túnel esquerdo
+			squares[ghost.currentIndex].classList.remove(ghost.className, "ghost");
+			ghost.currentIndex = 391;
+			squares[ghost.currentIndex].classList.add("ghost");
+		} else if (ghost.currentIndex + 1 === 392) {
+			// Teletransporte do túnel direito
+			squares[ghost.currentIndex].classList.remove(ghost.className, "ghost");
+			ghost.currentIndex = 364;
+			squares[ghost.currentIndex].classList.add("ghost");
+		} else {
+			// Escolhe uma nova direção aleatória
+			direction = directions[Math.floor(Math.random() * directions.length)];
+		}
+
+		// Adiciona a classe "scared-ghost" se o fantasma estiver assustado
+		if (ghost.isScared) {
+			squares[ghost.currentIndex].classList.add("scared-ghost");
+		}
+
+		// Lógica ao comer um fantasma assustado
+		if (
+			ghost.isScared &&
+			squares[pacmanCurrentIndex].classList.contains(ghost.className)
+		) {
+			// Remove apenas o fantasma comido
+			squares[ghost.currentIndex].classList.remove(
+				ghost.className,
+				"ghost",
+				"scared-ghost"
+			);
+			ghost.isRemoved = true; // Marca o fantasma como removido
+			clearInterval(ghost.timerId); // Para o movimento do fantasma
+
+			ghostsEaten++; // Incrementa o contador de fantasmas comidos
+			checkForWin(); // Verifica se a vitória foi alcançada
+		}
+
+		checkForGameOver();
+	}, ghost.speed);
+}
+
+// Lógica do Pac-Man para verificar se a vitória foi alcançada
+document.addEventListener("keydown", function (e) {
+	// Sua lógica de movimento do Pac-Man
+
+	// Se o Pac-Man alcançar a posição 5 e já tiver comido todos os fantasmas
+	if (pacmanCurrentIndex === targetIndex && ghostsEaten === totalGhosts) {
+		// O Pac-Man ganha se atingir o ponto 5 e todos os fantasmas forem comidos
+		showVictoryMessage(); // Exibe a vitória
+	}
+});
+
+  // Função para mover o robô até a posição 5 no layout
+function movePacmanToTarget() {
+	let moveInterval = setInterval(() => {
+		// Verifica se o Pac-Man já está na posição alvo
+		if (pacmanCurrentIndex === targetIndex) {
+			clearInterval(moveInterval); // Para o movimento automático
+
+			// Exibe a mensagem de vitória
+			showVictoryMessage();
+		} else {
+			// Calcula o próximo movimento do Pac-Man
+			if (pacmanCurrentIndex > targetIndex) {
+				pacmanCurrentIndex -= width; // Move para cima
+			} else if (pacmanCurrentIndex < targetIndex) {
+				pacmanCurrentIndex += width; // Move para baixo
+			}
+
+			// Atualiza a posição do Pac-Man no grid
+			squares.forEach(square => square.classList.remove("pacman"));
+			squares[pacmanCurrentIndex].classList.add("pacman");
+		}
+	}, 200); // Ajuste a velocidade conforme necessário
+}
+
+// Função para mostrar a vitória e o melhor tempo
+function showVictoryMessage() {
+    // Verifica se o tempo de jogo é melhor que o melhor tempo armazenado
+    if (bestTime === null || gameTime < bestTime) {
+        bestTime = gameTime; // Atualiza o melhor tempo
+        localStorage.setItem('bestTime', bestTime); // Armazena o novo melhor tempo no localStorage
+    }
+
+    // Exibe a mensagem de vitória
+    alert(`Parabéns, você venceu! Tempo de jogo: ${gameTime} segundos`);
+
+}
+  
+// Check for Game Over
+	function checkForGameOver () {
+		if (squares[pacmanCurrentIndex].classList.contains("ghost") && !squares[pacmanCurrentIndex].classList.contains("scared-ghost")) {
 			ghosts.forEach(ghost => clearInterval(ghost.timerId));
 			document.removeEventListener("keydown", movePacman);
-			let youWon = document.createElement("div");
+			let gameOver = document.createElement("div");
+			gameOver.classList.add("gameOver");
+			document.body.append(gameOver);
+			restartButton.classList.add("restart");
+			document.body.append(restartButton);
+			document.getElementById("play").removeEventListener("click", game);
+			restartButton.addEventListener("click", () => {window.location.reload(false)})				
+		}	
+	}
+
+// Check for Win
+// Função para verificar vitória
+function checkForWin() {
+	// Se todos os fantasmas foram comidos e o Pac-Man está na posição 5
+	if (ghostsEaten === totalGhosts && pacmanCurrentIndex === targetIndex) {
+		// Para o movimento de todos os fantasmas
+		ghosts.forEach(ghost => clearInterval(ghost.timerId));
+    clearInterval(updateGameTime);
+    console.log("Tempo de jogo finalizado:", gameTime, "segundos");
+
+		// Exibe a mensagem de vitória
+		showVictoryMessage();
+	}
+}
+  
+// Função para exibir a mensagem de vitória
+// Função para mostrar a vitória e o melhor tempo
+// Função para mostrar a mensagem de vitória
+function showVictoryMessage() {
+    const winMessage = document.createElement('div');
+    winMessage.innerText = `Você venceu! Tempo: ${gameTime} segundos`;
+    document.body.appendChild(winMessage);
+    let youWon = document.createElement("div");
 			youWon.classList.add("won");
 			document.body.append(youWon);
 			restartButton.classList.add("restart");
 			document.body.append(restartButton);
 			document.getElementById("play").removeEventListener("click", game);
 			restartButton.addEventListener("click", () => {window.location.reload(false)})
-		}
-	}
+}
+
+// Função para salvar o melhor tempo
+function saveBestTime() {
+    if (!bestTime || gameTime < bestTime) {
+        localStorage.setItem('bestTime', gameTime);
+        bestTime = gameTime;
+    }
+}
+
+
 }) 
