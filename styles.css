@@ -95,8 +95,8 @@ kbd{
 }
 
 .pinky{
-		content: url("https://i.ibb.co/GsLj7MQ/imresizer-1732970486956.png");
-	filter: hue-rotate(-40deg) brightness(200%);
+		content: url("https://i.ibb.co/8Xyhf0C/dino-verde.png");
+	filter: hue-rotate(-40deg) brightness(100%);
 	border:0;
 	background-color: transparent !important;
 	border-radius: 0 !important;
@@ -113,8 +113,8 @@ kbd{
 }
 
 .clyde{
-	content: url("https://i.ibb.co/GsLj7MQ/imresizer-1732970486956.png");
-	filter: hue-rotate(35deg) brightness(170%);
+	content: url("https://i.ibb.co/8Xyhf0C/dino-verde.png");
+	filter: hue-rotate(35deg) brightness(100%);
 	border:0;
 	background-color: transparent !important;
 	border-radius: 0 !important;
@@ -125,7 +125,7 @@ kbd{
 	content: url("https://i.ibb.co/GsLj7MQ/imresizer-1732970486956.png");
 	border:0;
 	border-radius: 0;
-	background-color: transparent;
+	background-color: white;
 }
 
 .pac-man {
@@ -170,12 +170,12 @@ kbd{
 }
 
 .gameOver::after{
-	content: "GAME OVER";
+	content: "PERDER";
 	position: absolute;
 }
 
 .won::after{
-	content: "YOU WON !";
+	content: "VOCÊ VENCEU !";
 	position: absolute;
 }
 
@@ -326,7 +326,6 @@ footer{
 		text-align: center;
 	}
 }
-
 
 
 
